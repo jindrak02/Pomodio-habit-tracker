@@ -27,7 +27,7 @@ body {
   transition: fill 0.3s ease;
 }
 
-.nav-icon.active {
+.active-link svg {
   fill: #6F2BF6;
 }
 
