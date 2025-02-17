@@ -15,7 +15,7 @@ const Timer = function () {
     focusTime: 0,
     breakTime: 0,
     sections: 0,
-    taskType: "",
+    taskType: ""
   });
 
   const handleStartTimer = function (timerSettings: TimerSettingsType) {
@@ -23,11 +23,15 @@ const Timer = function () {
     setTimerSettings(timerSettings);
   };
 
+  const handleFinishTimer = function () {
+    setIsRunning(false);
+  } 
+
   return (
     <>
       {/* Jako props timerProps rozbalím objekt timerSettings, což předá vše jako focusTime, breakTime apod.  */}
       {isRunning ? (
-        <TimerCountdown {...timerSettings} />
+        <TimerCountdown {...timerSettings} onFinish={handleFinishTimer}/>
       ) : (
         <TimerSettings onStart={handleStartTimer} />
       )}

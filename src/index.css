@@ -102,6 +102,15 @@ body {
   font-size: 1.2rem;
 }
 
+.back-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  font-size: 24px;
+  text-decoration: none;
+  color: rgb(255, 255, 255);
+}
+
 /* Viditelnost obrazovek defaultní */
 .hidden {
   display: none !important;
@@ -297,6 +306,11 @@ body {
     font-size: 3rem !important;
   }
 
+  .back-button {
+    top: 40px;
+    left: 30vw;
+  }
+
   .chart-wrapper {
     margin: 20px 0px 40px 0px;
     position: relative;
@@ -313,6 +327,11 @@ body {
 @media (min-width: 1200px) {
   :root {
     font-size: 18px;
+  }
+
+  .back-button {
+    top: 60px;
+    left: 35vw;
   }
 
 }

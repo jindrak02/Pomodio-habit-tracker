@@ -6,10 +6,14 @@ interface TimerCountdownProps {
   breakTime: number;
   sections: number;
   taskType: string;
+  onFinish: () => void;
 }
 
 export default function TimerCountdown(timerProps: TimerCountdownProps) {
-  const [isFocus, setIsFocus] = useState(true);
+  const [isFocus, setIsFocus] = useState(true); // true = Focus, false = Break
+  const [currentSection, setCurrentSection] = useState(1);
+  const [pomodoroFinished, setPomodoroFinished] = useState(false);
+  const [buttonsDisabled, setButtonsDisabled] = useState(false);
 
   const getExpiryTime = (minutes: number) => {
     const time = new Date();
@@ -22,15 +26,36 @@ export default function TimerCountdown(timerProps: TimerCountdownProps) {
     onExpire: () => handleExpire(),
   });
 
+  // Logika přepínání focus a break
   const handleExpire = function () {
     if (isFocus) {
-      console.log("Focus session done!");
-      setIsFocus(false);
+      if (currentSection < timerProps.sections) {
+        console.log("Focus session done! Actual session: " + currentSection);
+        setIsFocus(false);
+        setCurrentSection((prevValue) => prevValue + 1);
+      } else {
+        // Dokončení celého pomodoro
+        setPomodoroFinished(true);
+      }
     } else {
-      console.log("Break session done!");
+      console.log("Break session done! Starting session: " + currentSection);
       setIsFocus(true);
     }
   };
+
+  // Ukončení timeru
+  useEffect(() => {
+    if (pomodoroFinished == true) {
+      console.log("Sessions complete! Stoping timer.");
+      pause();
+      setButtonsDisabled(true);
+
+      const audio = new Audio("../../public/audio/trumpet_fanfare.mp3");
+      audio
+        .play()
+        .catch((error) => console.error("Audio playback failed:", error));
+    }
+  }, [pomodoroFinished]); // Spustí se vždy, když se změní pomodoroFinished
 
   // Automatický restart při změně isFocus
   useEffect(() => {
@@ -43,6 +68,7 @@ export default function TimerCountdown(timerProps: TimerCountdownProps) {
 
   const pauseButton = document.getElementById("pause") as HTMLButtonElement;
 
+  // Ovládání pause / play timeru
   const handlePauseResume = function (isRunning: boolean) {
     if (isRunning == true) {
       pause();
@@ -59,13 +85,40 @@ export default function TimerCountdown(timerProps: TimerCountdownProps) {
 
   return (
     <div className="container text-center flexbox-centered" id="timer">
+      {pomodoroFinished == true ? (
+        <a onClick={() => timerProps.onFinish()} className="back-button">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="34"
+            height="34"
+            fill="currentColor"
+            className="bi bi-arrow-left"
+            viewBox="0 0 16 16"
+          >
+            <path
+              fillRule="evenodd"
+              d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"
+            />
+          </svg>
+        </a>
+      ) : null}
+
       {/* <Audio src="./public/audio/trumpet_fanfare.mp3" id="finished-timer-audio"></Audio> */}
       <div className="container mb-5">
         <div className="row justify-content-center">
-          <div className="col-md-8">
+          <div
+            className="col-md-8"
+            onClick={
+              pomodoroFinished == false
+                ? () => handlePauseResume(isRunning)
+                : undefined
+            }
+          >
             <div className="card">
               <div className="card-header custom-btn-submit-form text-white">
-                <h4 className="mb-0 text-center" id="session-display"></h4>
+                <h4 className="mb-0 text-center" id="session-display">
+                  Session {currentSection}/{timerProps.sections}
+                </h4>
               </div>
               <div className="card-body">
                 <div className="row text-center">
@@ -75,7 +128,12 @@ export default function TimerCountdown(timerProps: TimerCountdownProps) {
                       {seconds < 10 ? `0${seconds}` : seconds}
                     </h3>
                     <p id="focus-break-display" className="mb-0">
-                      {isFocus == true ? "Focus 💪" : "Break 🥱"}
+                      {pomodoroFinished == false
+                        ? isFocus == true
+                          ? "Focus 💪"
+                          : "Break 🥱"
+                        : "Pomodoro finished! 🥳"}
+                      {/* {isFocus == true ? "Focus 💪" : "Break 🥱"} */}
                     </p>
                   </div>
                 </div>
@@ -89,6 +147,7 @@ export default function TimerCountdown(timerProps: TimerCountdownProps) {
             className="mx-3 btn custom-btn-timer btn-lg"
             onClick={() => handlePauseResume(isRunning)}
             id="pause"
+            disabled={buttonsDisabled}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -105,6 +164,8 @@ export default function TimerCountdown(timerProps: TimerCountdownProps) {
             type="button"
             className="mx-3 btn custom-btn-timer btn-lg"
             id="stop"
+            onClick={() => setPomodoroFinished(true)}
+            disabled={buttonsDisabled}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
