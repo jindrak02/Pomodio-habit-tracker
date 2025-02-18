@@ -12,12 +12,12 @@ function App() {
   if (!isTokenValid()) {
     return (
       <>
-      <Routes>
-        <Route path="/" element={<LoginScreen/>} />
-        <Route path="*" element={<Navigate to="/" />} />
-      </Routes>
-    </>
-    )
+        <Routes>
+          <Route path="/" element={<LoginScreen />} />
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </>
+    );
   }
 
   return (

@@ -25,13 +25,17 @@ const Timer = function () {
 
   const handleFinishTimer = function () {
     setIsRunning(false);
-  } 
+  }
+  
+  const handleGoogleDrive = function (realFocusTime: Number | undefined) {
+    console.log("Handle google drive trigered, real focus time: " + realFocusTime);
+  }
 
   return (
     <>
       {/* Jako props timerProps rozbalím objekt timerSettings, což předá vše jako focusTime, breakTime apod.  */}
       {isRunning ? (
-        <TimerCountdown {...timerSettings} onFinish={handleFinishTimer}/>
+        <TimerCountdown {...timerSettings} onFinish={handleFinishTimer} handleGoogleDrive={handleGoogleDrive}/>
       ) : (
         <TimerSettings onStart={handleStartTimer} />
       )}

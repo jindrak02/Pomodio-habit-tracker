@@ -7,6 +7,7 @@ interface TimerCountdownProps {
   sections: number;
   taskType: string;
   onFinish: () => void;
+  handleGoogleDrive: (realFocusTime: Number | undefined) => void;
 }
 
 export default function TimerCountdown(timerProps: TimerCountdownProps) {
@@ -14,6 +15,7 @@ export default function TimerCountdown(timerProps: TimerCountdownProps) {
   const [currentSection, setCurrentSection] = useState(1);
   const [pomodoroFinished, setPomodoroFinished] = useState(false);
   const [buttonsDisabled, setButtonsDisabled] = useState(false);
+  const [realFocusTime, setRealFocusTime] = useState<Number>();
 
   const getExpiryTime = (minutes: number) => {
     const time = new Date();
@@ -54,8 +56,28 @@ export default function TimerCountdown(timerProps: TimerCountdownProps) {
       audio
         .play()
         .catch((error) => console.error("Audio playback failed:", error));
+
+      // Výpočet reálného focus time
+      const completedFocusTime =
+        (currentSection - 1) * timerProps.focusTime * 60; // Čas dokončených sekcí
+
+      const remainingTime = minutes * 60 + seconds;
+      const currentFocusTime = isFocus
+        ? timerProps.focusTime * 60 - remainingTime
+        : 0; // Čas v probíhající sekci (pouze pokud je ve focus režimu)
+
+      const actualFocusTime = completedFocusTime + currentFocusTime; // Skutečný focus čas
+
+      setRealFocusTime(Math.round(actualFocusTime / 60));
     }
   }, [pomodoroFinished]); // Spustí se vždy, když se změní pomodoroFinished
+
+  // Počkat na aktualizaci realFocusTime a teprve pak zavolat handleGoogleDrive
+  useEffect(() => {
+    if (pomodoroFinished) {
+      timerProps.handleGoogleDrive(realFocusTime);
+    }
+  }, [realFocusTime]); // Spustí se vždy, když se změní realFocusTime
 
   // Automatický restart při změně isFocus
   useEffect(() => {

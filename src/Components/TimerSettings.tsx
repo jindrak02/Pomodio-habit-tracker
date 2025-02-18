@@ -61,7 +61,7 @@ const TimerSettings = function ({onStart}: TimerSettingsProps) {
                 required
                 >
                 <option></option>
-                <option value="0.25">0,25 min</option>
+                <option value="0.5">0,5 min</option>
                 <option value="1">1 min</option>
                 <option value="15">15 min</option>
                 <option value="20">20 min</option>
