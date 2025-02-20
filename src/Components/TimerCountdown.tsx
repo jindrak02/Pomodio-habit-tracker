@@ -1,13 +1,18 @@
 import { useTimer } from "react-timer-hook";
 import { useState, useEffect } from "react";
 
+type sessionData = {
+    focusTime: number;
+    taskType: string;
+}
+
 interface TimerCountdownProps {
   focusTime: number;
   breakTime: number;
   sections: number;
   taskType: string;
   onFinish: () => void;
-  handleGoogleDrive: (realFocusTime: Number | undefined) => void;
+  handleGoogleDrive: (data: sessionData) => void;
 }
 
 export default function TimerCountdown(timerProps: TimerCountdownProps) {
@@ -15,7 +20,7 @@ export default function TimerCountdown(timerProps: TimerCountdownProps) {
   const [currentSection, setCurrentSection] = useState(1);
   const [pomodoroFinished, setPomodoroFinished] = useState(false);
   const [buttonsDisabled, setButtonsDisabled] = useState(false);
-  const [realFocusTime, setRealFocusTime] = useState<Number>();
+  const [realFocusTime, setRealFocusTime] = useState<number>(0);
 
   const getExpiryTime = (minutes: number) => {
     const time = new Date();
@@ -75,7 +80,11 @@ export default function TimerCountdown(timerProps: TimerCountdownProps) {
   // Počkat na aktualizaci realFocusTime a teprve pak zavolat handleGoogleDrive
   useEffect(() => {
     if (pomodoroFinished) {
-      timerProps.handleGoogleDrive(realFocusTime);
+        const data = {
+            taskType: timerProps.taskType,
+            focusTime: realFocusTime,
+        }
+      timerProps.handleGoogleDrive(data);
     }
   }, [realFocusTime]); // Spustí se vždy, když se změní realFocusTime
 

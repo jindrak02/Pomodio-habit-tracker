@@ -1,7 +1,7 @@
 import React, {createContext, useContext, useEffect, useState} from "react";
 
 interface AuthContextType {
-    token: String | null;
+    token: string | null;
     signInAndGetToken: () => Promise<string>;
     verifyToken: () => Promise<boolean>;
     clearToken: () => void;
@@ -12,7 +12,7 @@ const AuthContext = createContext <AuthContextType | undefined> (undefined);
 
 // Wraper, uvnitř kterého budou dostupné dané funkce
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}) => {
-    const [token, setToken] = useState <String | null>(null);
+    const [token, setToken] = useState <string | null>(null);
 
     const CLIENT_ID = "1082310563066-i012m4gulkr01asucv0gn452f82hk6kc.apps.googleusercontent.com";
     const SCOPES = "https://www.googleapis.com/auth/drive.file";
@@ -96,8 +96,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}
           } else {
             setToken(response.access_token);
             saveToken(response.access_token,response.expires_in);
-            console.log("Token získán:" + response.access_token);
+            //console.log("Token získán:" + response.access_token);
             resolve(response.access_token);
+            return response.access_token;
           }
         };
 

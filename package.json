@@ -19,7 +19,8 @@
     "react-chartjs-2": "^5.3.0",
     "react-dom": "^18.3.1",
     "react-router-dom": "^7.1.5",
-    "react-timer-hook": "^3.0.8"
+    "react-timer-hook": "^3.0.8",
+    "sweetalert2": "^11.17.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
