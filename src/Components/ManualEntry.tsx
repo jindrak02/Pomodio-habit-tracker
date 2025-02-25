@@ -13,24 +13,13 @@ interface Day {
   minutes: number;
 }
 
-type TaskTypeData = {
-  taskType: string;
-  totalFocusTime: number;
-  days: Array<string>;
-}
-
-type TaskTypeAccumulator = {
-  [key: string]: TaskTypeData;
-}
-
-interface SessionData {
+type sessionData = {
   focusTime: number;
-  taskTypes: TaskTypeAccumulator;
+  taskType: string;
 }
-
 
 function ManualEntry() {
-  const [totalFocusTime, setTotalFocusTime] = useState("");
+  const [totalFocusTime, setTotalFocusTime] = useState<number>(0);
   const [date, setDate] = useState("");
   const [taskType, setTaskType] = useState("");
   const { token, signInAndGetToken, verifyToken } = useAuth();
@@ -65,7 +54,7 @@ function ManualEntry() {
         const res = await downloadFileFromGoogleDrive(accessToken, fileId);
         console.log("File found and downloaded, updating file ...");
 
-        updateData(res, taskType, parseInt(totalFocusTime, 10), date);
+        updateData(res, taskType, totalFocusTime, date);
         res.taskTypes[taskType].days.sort(
           (a: Day, b: Day) =>
             new Date(a.date).getTime() - new Date(b.date).getTime()
@@ -82,23 +71,11 @@ function ManualEntry() {
       } else {
         console.log("File not found, creating new one ...");
 
-        const sessionData: SessionData = {
-          focusTime: 0, // Přidání focusTime, aby odpovídalo rozhraní
-          taskTypes: tasksString.reduce(
-            (acc: TaskTypeAccumulator, taskType: string) => {
-              acc[taskType] = {
-                taskType,
-                totalFocusTime: 0,
-                days: [],
-              };
-              return acc;
-            },
-            {} as TaskTypeAccumulator
-          ),
+        const sessionData: sessionData = {
+          focusTime: totalFocusTime,
+          taskType: taskType
         };
         
-
-        updateData(sessionData, taskType, parseInt(totalFocusTime, 10), date);
         await createNewFileOnGoogleDrive(
             accessToken,
           "pomodioSessionData.json",
@@ -152,7 +129,7 @@ function ManualEntry() {
                 id="manualTotalFocusTime"
                 aria-label="Username"
                 value={totalFocusTime}
-                onChange={(e) => setTotalFocusTime(e.target.value)}
+                onChange={(e) => setTotalFocusTime(Number(e.target.value))}
                 required
               />
             </div>
