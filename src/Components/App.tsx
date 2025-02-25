@@ -1,13 +1,16 @@
 import {} from "react";
 import { useAuth } from "../Contexts/AuthContext";
+import { useTimerContext } from "../Contexts/TimerContext";
 import LoginScreen from "./LoginScreen";
 import Timer from "./Timer";
+import Dashboard from "./Dashboard";
 import NavPanel from "./NavPanel";
+import ManualEntry from "./ManualEntry";
 import { Navigate, Route, Routes } from "react-router-dom";
 
 function App() {
   const { isTokenValid } = useAuth();
-  let localToken = localStorage.getItem("token");
+  const { isRunning } = useTimerContext();
 
   if (!isTokenValid()) {
     return (
@@ -20,16 +23,19 @@ function App() {
     );
   }
 
+  console.log(isRunning);
+  
   return (
     <>
       <Routes>
         <Route path="/" element={<Navigate to="/timer" />} />
         <Route path="timer" element={<Timer />} />
-        <Route path="chart" element={<h1> Chart </h1>} />
+        <Route path="dashboard" element={<Dashboard />} />
+        <Route path="manual_entry" element={<ManualEntry />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
 
-      <NavPanel />
+      {isRunning ? null : <NavPanel />}
     </>
   );
 }

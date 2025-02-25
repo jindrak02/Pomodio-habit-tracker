@@ -114,6 +114,15 @@ export default function TimerCountdown(timerProps: TimerCountdownProps) {
     }
   };
 
+  // Zobrazení stavu timeru v liště prohlížeče
+  useEffect(() => {
+    if (pomodoroFinished) {
+      document.title = "Pomodoro finished! 🥳";
+    } else {
+      document.title = `${isFocus ? "💪Focus" : "🥱Break"} - ${minutes}:${seconds < 10 ? `0${seconds}` : seconds}`;
+    }
+  }, [minutes, seconds, isFocus, pomodoroFinished]);
+
   return (
     <div className="container text-center flexbox-centered" id="timer">
       {pomodoroFinished == true ? (

@@ -1,17 +1,50 @@
 import { NavLink } from "react-router-dom";
+import { useAuth } from "../Contexts/AuthContext";
+import Swal from "sweetalert2";
 
 const NavPanel = function () {
+  const { clearToken } = useAuth();
+
+  const handleLogOut = () => {
+    Swal.fire({
+      title: "Do you really want to Log Out?",
+      icon: "question",
+      showDenyButton: true,
+      confirmButtonText: "Yes",
+      denyButtonText: `Don't Log Out`,
+      customClass: {
+        confirmButton: "swal-confirm-btn",
+        denyButton: "swal-deny-btn",
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        clearToken();
+        Swal.fire({
+          title: "Log Out successful",
+          icon: "success",
+          timer: 2000,
+          showConfirmButton: false,
+        }).then(() => {
+          window.location.reload();
+        });
+      }
+    });
+  };
+
   return (
     <>
       <nav className="navbar navbar-expand fixed-bottom" id="navbar-panel">
         <div className="container-fluid justify-content-around" id="nav-panel">
-          <NavLink to="/timer" className={({isActive}) => (isActive ? "active-link" : "")}>
+          <NavLink
+            to="/timer"
+            className={({ isActive }) => (isActive ? "active-link" : "")}
+          >
             <button
               type="button"
               className="btn btn-outline-secondary custom-btn btn-tooltip"
               id="timerButton"
               data-tooltip="Timer"
-                >
+            >
               <svg
                 className="nav-icon bi bi-stopwatch-fill"
                 xmlns="http://www.w3.org/2000/svg"
@@ -19,8 +52,58 @@ const NavPanel = function () {
                 height="30"
                 fill="currentColor"
                 viewBox="0 0 16 16"
-                >
+              >
                 <path d="M6.5 0a.5.5 0 0 0 0 1H7v1.07A7.001 7.001 0 0 0 8 16a7 7 0 0 0 5.29-11.584l.013-.012.354-.354.353.354a.5.5 0 1 0 .707-.707l-1.414-1.415a.5.5 0 1 0-.707.707l.354.354-.354.354-.012.012A6.97 6.97 0 0 0 9 2.071V1h.5a.5.5 0 0 0 0-1zm2 5.6V9a.5.5 0 0 1-.5.5H4.5a.5.5 0 0 1 0-1h3V5.6a.5.5 0 1 1 1 0"></path>
+              </svg>
+            </button>
+          </NavLink>
+
+          {/* <NavLink to="/timer" className={({isActive}) => (isActive ? "active-link" : "")}>
+            
+          </NavLink> */}
+
+          <NavLink
+            to="/dashboard"
+            className={({ isActive }) => (isActive ? "active-link" : "")}
+          >
+            <button
+              type="button"
+              className="btn btn-outline-secondary custom-btn btn-tooltip"
+              id="dashboardButton"
+              data-tooltip="Dashboard"
+            >
+              <svg
+                className="nav-icon bi bi-bar-chart-line-fill"
+                xmlns="http://www.w3.org/2000/svg"
+                width="30"
+                height="30"
+                fill="currentColor"
+                viewBox="0 0 16 16"
+              >
+                <path d="M11 2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3h1V7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7h1z" />
+              </svg>
+            </button>
+          </NavLink>
+
+          <NavLink
+            to="/manual_entry"
+            className={({ isActive }) => (isActive ? "active-link" : "")}
+          >
+            <button
+              type="button"
+              className="btn btn-outline-secondary custom-btn btn-tooltip"
+              id="manualEntryButton"
+              data-tooltip="Manual Entry"
+            >
+              <svg
+                className="nav-icon bi bi-plus-circle-fill"
+                xmlns="http://www.w3.org/2000/svg"
+                width="30"
+                height="30"
+                fill="currentColor"
+                viewBox="0 0 16 16"
+              >
+                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z" />
               </svg>
             </button>
           </NavLink>
@@ -28,44 +111,9 @@ const NavPanel = function () {
           <button
             type="button"
             className="btn btn-outline-secondary custom-btn btn-tooltip"
-            id="dashboardButton"
-            data-tooltip="Dashboard"
-          >
-            <svg
-              className="nav-icon bi bi-bar-chart-line-fill"
-              xmlns="http://www.w3.org/2000/svg"
-              width="30"
-              height="30"
-              fill="currentColor"
-              viewBox="0 0 16 16"
-            >
-              <path d="M11 2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3h1V7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7h1z" />
-            </svg>
-          </button>
-
-          <button
-            type="button"
-            className="btn btn-outline-secondary custom-btn btn-tooltip"
-            id="manualEntryButton"
-            data-tooltip="Manual Entry"
-          >
-            <svg
-              className="nav-icon bi bi-plus-circle-fill"
-              xmlns="http://www.w3.org/2000/svg"
-              width="30"
-              height="30"
-              fill="currentColor"
-              viewBox="0 0 16 16"
-            >
-              <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z" />
-            </svg>
-          </button>
-
-          <button
-            type="button"
-            className="btn btn-outline-secondary custom-btn btn-tooltip"
             id="logOutButton"
             data-tooltip="Log out"
+            onClick={handleLogOut}
           >
             <svg
               className="nav-icon bi bi-box-arrow-in-left"

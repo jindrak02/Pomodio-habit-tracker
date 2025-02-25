@@ -13,7 +13,7 @@ type sessionData = {
     taskType: string;
 }
 
-const updateData = function(data: any, taskType: string, focusTime: number, date: string) {
+export const updateData = function(data: any, taskType: string, focusTime: number, date: string) {
     const task = data.taskTypes[taskType];
   
     if (task) {
@@ -38,7 +38,7 @@ const updateData = function(data: any, taskType: string, focusTime: number, date
     } else {
       console.log("Task not found when updating data ...");
     }  
-}
+};
 
 export const createNewFileOnGoogleDrive = async function (accessToken: string | null, fileName: string, fileContent: sessionData) {
 
@@ -98,7 +98,7 @@ export const createNewFileOnGoogleDrive = async function (accessToken: string | 
     const res = await response.json();
     console.log("File uploaded successfully: " + res);
     return res;
-}
+};
 
 export const findFileOnGoogleDrive = async function ( accessToken: string | null, fileName: string) {
   const response = await fetch(
@@ -125,7 +125,7 @@ export const findFileOnGoogleDrive = async function ( accessToken: string | null
   }
 };
 
-export const downloadFileFromGoogleDrive = async function (accessToken: string, fileId: string) {
+export const downloadFileFromGoogleDrive = async function (accessToken: string | null, fileId: string) {
     const response = await fetch(
       `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`,
       {
@@ -142,4 +142,28 @@ export const downloadFileFromGoogleDrive = async function (accessToken: string, 
 
     const data = await response.json();
     return data;
+};
+
+export const updateFileOnGoogleDrive = async function (accessToken: string | null, fileId: string, file: File) {
+    const response = await fetch(
+      "https://www.googleapis.com/upload/drive/v3/files/"+fileId+"?uploadType=media",
+      {
+        method: "PATCH",
+        headers: {
+          Authorization: "Bearer " + accessToken,
+          "Content-Type": file.type,
+        },
+        body: file,
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(
+        "Failed to upload file to Google Drive: " + response.statusText
+      );
+    }
+
+    const result = await response.json();
+    console.log("File uploaded on Google Drive successfully: ", result);
+    return result;
 }

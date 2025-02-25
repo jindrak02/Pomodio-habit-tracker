@@ -1,6 +1,13 @@
 import { useState } from "react";
 import { useAuth } from "../Contexts/AuthContext";
-import { createNewFileOnGoogleDrive, findFileOnGoogleDrive } from "../Contexts/googleDriveService";
+import { useTimerContext } from "../Contexts/TimerContext";
+import {
+  createNewFileOnGoogleDrive,
+  findFileOnGoogleDrive,
+  downloadFileFromGoogleDrive,
+  updateData,
+  updateFileOnGoogleDrive,
+} from "../Contexts/googleDriveService";
 import Swal from 'sweetalert2';
 import TimerSettings from "./TimerSettings";
 import TimerCountdown from "./TimerCountdown";
@@ -18,7 +25,7 @@ type sessionData = {
 }
 
 const Timer = function () {
-  const [isRunning, setIsRunning] = useState(false);
+  const {isRunning, setIsRunning} = useTimerContext();
   const [timerSettings, setTimerSettings] = useState<TimerSettingsType>({
     focusTime: 0,
     breakTime: 0,
@@ -39,7 +46,6 @@ const Timer = function () {
   }
 
   // Google drive file logic
-  
   const handleGoogleDrive = async function (data: sessionData) {
     let currentToken = token;
 
@@ -74,13 +80,20 @@ const Timer = function () {
     const fileId = await findFileOnGoogleDrive(currentToken, fileName);
 
     if (fileId) {
-        console.log("File found with id: " + fileId);
+        console.log("File found with id: " + fileId + ". Downloading file...");
+        const res = await downloadFileFromGoogleDrive(currentToken, fileId);
+        updateData(res, data.taskType, data.focusTime, new Date().toISOString().split('T')[0]);
+
+        console.log(res);
+
+        const updatedFile = new File([JSON.stringify(res, null, 2)], fileName, { type: "application/json" });
+        return await updateFileOnGoogleDrive(currentToken, fileId, updatedFile);
     } else {
+        createNewFileOnGoogleDrive(currentToken, fileName, data);
         console.log("File not found, creating new one.");
-        createNewFileOnGoogleDrive(currentToken, fileName, data);   
     }
   }
-
+  
   return (
     <>
       {/* Jako props timerProps rozbalím objekt timerSettings, což předá vše jako focusTime, breakTime apod.  */}
