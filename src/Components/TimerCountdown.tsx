@@ -57,7 +57,7 @@ export default function TimerCountdown(timerProps: TimerCountdownProps) {
       pause();
       setButtonsDisabled(true);
 
-      const audio = new Audio("../../public/audio/trumpet_fanfare.mp3");
+      const audio = new Audio("/audio/trumpet_fanfare.mp3");
       audio
         .play()
         .catch((error) => console.error("Audio playback failed:", error));
