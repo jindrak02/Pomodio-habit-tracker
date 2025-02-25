@@ -10,7 +10,7 @@ const LoginScreen = function () {
 
             <div className="container" id="login-form-container">
                 <div className="card w-75 py-3 px-3 login-form-google">
-                    <img className="mb-4" src="./public/img/icon.png" alt="timer icon" width="72"/>
+                    <img className="mb-4" src="/img/icon.png" alt="timer icon" width="72"/>
 
                     <div className="container px-0" id="heading">
                         <h1>Welcome to Pomodio habit tracker</h1>

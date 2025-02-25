@@ -19,7 +19,7 @@ type sessionData = {
 }
 
 function ManualEntry() {
-  const [totalFocusTime, setTotalFocusTime] = useState<number>(0);
+  const [totalFocusTime, setTotalFocusTime] = useState<string>("");
   const [date, setDate] = useState("");
   const [taskType, setTaskType] = useState("");
   const { token, signInAndGetToken, verifyToken } = useAuth();
@@ -54,7 +54,8 @@ function ManualEntry() {
         const res = await downloadFileFromGoogleDrive(accessToken, fileId);
         console.log("File found and downloaded, updating file ...");
 
-        updateData(res, taskType, totalFocusTime, date);
+        const focusTimeValue = totalFocusTime.trim() ? Number(totalFocusTime) : 0;
+        updateData(res, taskType, focusTimeValue, date);
         res.taskTypes[taskType].days.sort(
           (a: Day, b: Day) =>
             new Date(a.date).getTime() - new Date(b.date).getTime()
@@ -72,7 +73,7 @@ function ManualEntry() {
         console.log("File not found, creating new one ...");
 
         const sessionData: sessionData = {
-          focusTime: totalFocusTime,
+          focusTime: totalFocusTime.trim() ? Number(totalFocusTime) : 0,
           taskType: taskType
         };
         
@@ -129,7 +130,7 @@ function ManualEntry() {
                 id="manualTotalFocusTime"
                 aria-label="Username"
                 value={totalFocusTime}
-                onChange={(e) => setTotalFocusTime(Number(e.target.value))}
+                onChange={(e) => setTotalFocusTime(e.target.value)}
                 required
               />
             </div>
