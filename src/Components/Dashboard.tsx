@@ -6,7 +6,6 @@ import { Chart, ChartConfiguration, BarElement, BarController, CategoryScale, Li
 Chart.register(BarElement, BarController, CategoryScale, LinearScale, Title, Tooltip);
 import { useAuth } from "../Contexts/AuthContext";
 import { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
 
 interface Day {
     date: string;
@@ -26,7 +25,6 @@ const Dashboard = function () {
   const [currentTaskChart, setCurrentTaskChart] = useState <Chart | null>(null);
   const barChartRef = useRef<HTMLCanvasElement | null>(null);
   const taskChartRef = useRef<HTMLCanvasElement | null>(null);
-  const navigate = useNavigate();
 
   const createBarChart = function(xlabels: Array<string>, chartData: Array<number>, xlabel: string, name: string){
 

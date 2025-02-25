@@ -8,6 +8,27 @@ import {
   updateFileOnGoogleDrive,
 } from "../Contexts/googleDriveService";
 
+interface Day {
+  date: string;
+  minutes: number;
+}
+
+type TaskTypeData = {
+  taskType: string;
+  totalFocusTime: number;
+  days: Array<string>;
+}
+
+type TaskTypeAccumulator = {
+  [key: string]: TaskTypeData;
+}
+
+interface SessionData {
+  focusTime: number;
+  taskTypes: TaskTypeAccumulator;
+}
+
+
 function ManualEntry() {
   const [totalFocusTime, setTotalFocusTime] = useState("");
   const [date, setDate] = useState("");
@@ -61,7 +82,8 @@ function ManualEntry() {
       } else {
         console.log("File not found, creating new one ...");
 
-        const sessionData = {
+        const sessionData: SessionData = {
+          focusTime: 0, // Přidání focusTime, aby odpovídalo rozhraní
           taskTypes: tasksString.reduce(
             (acc: TaskTypeAccumulator, taskType: string) => {
               acc[taskType] = {
@@ -74,6 +96,7 @@ function ManualEntry() {
             {} as TaskTypeAccumulator
           ),
         };
+        
 
         updateData(sessionData, taskType, parseInt(totalFocusTime, 10), date);
         await createNewFileOnGoogleDrive(
