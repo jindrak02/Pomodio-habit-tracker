@@ -1,5 +1,27 @@
-# Pomodio habit tracker
+Pomodio is a cute, frontend-only timer and habit tracker built with React.
 
-This app was created as a part of college web technologies project. The app is running at https://pomodio.com/
+Build with little bit of spagheti coding as part of my first univesity web tech project.
 
-Main goal of this frontend only single page app is to run a pomodoro timer, that saves statistic data on users google drive (therefore no database or backend is needed) and then display user a dashboard of his progress with those habits.
+🔗 Live at: https://pomodio.com
+
+Key Features:
+
+    ☁️ No Backend, No Database – All user data is saved securely to their own Google Drive via the Google Drive API, ensuring privacy and control.
+
+    ⏱️ Pomodoro Timer – Helps users structure work into focused intervals with break sessions.
+
+    📊 Progress Dashboard – Visualizes time spent on habits and productivity trends.
+
+
+
+🔍 Why It’s Unique:
+
+    This is a beautiful example of using Google API to the fullest.
+    The application does not manage its own authentication or database - everything is handed over to Google API.
+
+🛠️ Tech Stack
+
+    React (Vite)
+    TypeScript
+    Google API Client (gapi)
+    Chart.js for visual analytics
