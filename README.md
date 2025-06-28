@@ -25,3 +25,4 @@ Key Features:
     TypeScript
     Google API Client (gapi)
     Chart.js for visual analytics
+    Deploy via Cloudflare pages
